@@ -4,9 +4,12 @@
 		<meta charset="utf-8">
 		<title>freeskate</title>
 
+		<link rel="shortcut icon" href="logo.png">
+
 		<style>
 			html {
 				height: 100%;
+				overflow: hidden;
 			}
 			body {
 				height: 100%;
@@ -49,10 +52,8 @@
 			const exrLoader = new EXRLoader();
 			exrLoader.load('skate_park_1k.exr', texture => {
 				const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-				console.log(envMap, texture);
 				pmremGenerator.dispose();
 				scene.environment = envMap;
-				scene.background = envMap;
 				webglRenderer.render(scene, camera)
 			});
 
@@ -63,8 +64,6 @@
 				1, // Near
 				400, // Far
 			);
-			camera.position.set(0, 150, 150);
-			camera.lookAt(0, 0, 0);
 
 			const light1 = new THREE.AmbientLight(0xFFFFFF, .3);
 			light1.name = 'ambient_light';
@@ -74,6 +73,29 @@
 			light2.position.set(0.5, 0, 0.866); // ~60º
 			light2.name = 'main_light';
 			camera.add(light2);
+
+			const materialChrome = new THREE.MeshStandardMaterial({
+				color: 0xffffff,
+				roughness: .1,
+				metalness: .75,
+			});
+
+			const materialAluminium = new THREE.MeshStandardMaterial({
+				color: 0xaaaaaa,
+				roughness: .3,
+				metalness: .6,
+			});
+
+			const materialAcrylic = new THREE.MeshStandardMaterial({
+				color: 0xaaaaaa,
+				roughness: .6,
+				metalness: 0,
+			});
+
+			const materialPolyurethaneBlack  = new THREE.MeshStandardMaterial({color: 0x292825});
+			const materialPolyurethaneBlue   = new THREE.MeshStandardMaterial({color: 0x0075C2});
+			const materialPolyurethaneViolet = new THREE.MeshStandardMaterial({color: 0x91478F});
+			const materialPolyurethaneOrange = new THREE.MeshStandardMaterial({color: 0xFF8800});
 
 			const gltfLoader = new GLTFLoader();
 			const url = 'freeskate.glb';
@@ -94,7 +116,7 @@
 
 				camera.position.copy(center);
 				camera.position.x += size / 2.0;
-				camera.position.y += size / 5.0;
+				camera.position.y += size / 8.0;
 				camera.position.z += size / 2.0;
 				camera.lookAt(center);
 
@@ -102,6 +124,20 @@
 				orbitControls.maxDistance = size * 10;
 				orbitControls.screenSpacePanning = true;
 				orbitControls.addEventListener('change', () => webglRenderer.render(scene, camera));
+
+				gltf.scene.traverse(object => {
+					if (object.name.startsWith('chassis')) {
+						object.material = materialChrome;
+					} else if (object.name.startsWith('axle')) {
+						object.material = materialChrome;
+					} else if (object.name.startsWith('plate')) {
+						object.material = materialAluminium;
+					} else if (object.name.startsWith('shock-absorber')) {
+						object.material = materialAcrylic;
+					} else if (object.name.startsWith('wheel-front') || object.name.startsWith('wheel-back')) {
+						object.material = materialPolyurethaneBlue;
+					}
+				});
 
 				webglRenderer.render(scene, camera)
 			});
