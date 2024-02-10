@@ -46,16 +46,6 @@
 			webglRenderer.toneMapping = THREE.ACESFilmicToneMapping;
 			webglRenderer.toneMappingExposure = 2;
 
-			const pmremGenerator = new THREE.PMREMGenerator(webglRenderer);
-			pmremGenerator.compileEquirectangularShader();
-			const exrLoader = new EXRLoader();
-			exrLoader.load('skate_park_1k.exr', texture => {
-				const envMap = pmremGenerator.fromEquirectangular(texture).texture;
-				pmremGenerator.dispose();
-				scene.environment = envMap;
-				webglRenderer.render(scene, camera)
-			});
-
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera(
 				60, // FOV
@@ -63,6 +53,26 @@
 				1, // Near
 				400, // Far
 			);
+
+			let frameId = null;
+			function render() {
+				if (frameId === null) {
+					frameId = requestAnimationFrame(() => {
+						webglRenderer.render(scene, camera);
+						frameId = null;
+					});
+				}
+			}
+
+			const pmremGenerator = new THREE.PMREMGenerator(webglRenderer);
+			pmremGenerator.compileEquirectangularShader();
+			const exrLoader = new EXRLoader();
+			exrLoader.load('skate_park_1k.exr', texture => {
+				const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+				pmremGenerator.dispose();
+				scene.environment = envMap;
+				render();
+			});
 
 			const light1 = new THREE.AmbientLight(0xFFFFFF, .3);
 			light1.name = 'ambient_light';
@@ -122,7 +132,7 @@
 				const orbitControls = new OrbitControls(camera, webglRenderer.domElement);
 				orbitControls.maxDistance = size * 10;
 				orbitControls.screenSpacePanning = true;
-				orbitControls.addEventListener('change', () => webglRenderer.render(scene, camera));
+				orbitControls.addEventListener('change', render);
 
 				gltf.scene.traverse(object => {
 					if (object.name.startsWith('chassis')) {
@@ -138,14 +148,14 @@
 					}
 				});
 
-				webglRenderer.render(scene, camera)
+				render();
 			});
 
 			function handleWindowResize() {
 				camera.aspect = window.innerWidth / window.innerHeight;
 				camera.updateProjectionMatrix();
 				webglRenderer.setSize(window.innerWidth, window.innerHeight);
-				webglRenderer.render(scene, camera);
+				render();
 			}
 			handleWindowResize();
 			window.addEventListener('resize', handleWindowResize);
