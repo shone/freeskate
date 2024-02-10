@@ -43,7 +43,6 @@
 			const webglRenderer = new THREE.WebGLRenderer({canvas: document.querySelector('canvas')});
 			webglRenderer.setClearColor(new THREE.Color(0x191919), 1);
 			webglRenderer.setPixelRatio(window.devicePixelRatio);
-			webglRenderer.useLegacyLights = false;
 			webglRenderer.toneMapping = THREE.ACESFilmicToneMapping;
 			webglRenderer.toneMappingExposure = 2;
 
