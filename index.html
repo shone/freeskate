@@ -3,27 +3,15 @@
 	<head>
 		<meta charset="utf-8">
 		<title>freeskate</title>
-
+		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="shortcut icon" href="logo.png">
-
-		<style>
-			html {
-				height: 100%;
-				overflow: hidden;
-			}
-			body {
-				height: 100%;
-				margin: 0;
-			}
-			canvas {
-				width:  100%;
-				height: 100%;
-			}
-		</style>
+		<link rel="stylesheet" href="main.css">
 	</head>
-
 	<body>
 		<canvas></canvas>
+		<div class="menu edge-guard">  <span class="items"></span> <label>Edge guard</label>  </div>
+		<div class="menu wheel-front"> <span class="items"></span> <label>Front wheel</label> </div>
+		<div class="menu wheel-back">  <span class="items"></span> <label>Back wheel</label>  </div>
 		<script type="importmap">
 			{
 				"imports": {
@@ -32,145 +20,6 @@
 				}
 			}
 		</script>
-		<script type="module">
-			import * as THREE from 'three';
-			import {OrbitControls} from './threejs/examples/jsm/controls/OrbitControls.js';
-			import {GLTFLoader} from './threejs/examples/jsm/loaders/GLTFLoader.js';
-
-			import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-			import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-			import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
-			import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-
-			const webglRenderer = new THREE.WebGLRenderer({canvas: document.querySelector('canvas')});
-			webglRenderer.setClearColor(new THREE.Color(0x191919), 1);
-			webglRenderer.setPixelRatio(window.devicePixelRatio);
-			webglRenderer.toneMapping = THREE.ACESFilmicToneMapping;
-			webglRenderer.toneMappingExposure = 1;
-
-			const scene = new THREE.Scene();
-			const camera = new THREE.PerspectiveCamera(
-				60, // FOV
-				window.innerWidth / window.innerHeight, // Aspect
-				1, // Near
-				400, // Far
-			);
-
-			const composer = new EffectComposer(webglRenderer);
-
-			const renderPass = new RenderPass(scene, camera);
-			composer.addPass(renderPass);
-
-			const gtaoPass = new GTAOPass(
-				scene, camera,
-				window.innerWidth, window.innerHeight,
-				null,
-				{ // AO parameters
-					radius: 0.01,
-					distanceExponent: 1,
-					thickness: 1,
-					scale: 1,
-					samples: 4,
-					distanceFallOff: 1,
-					screenSpaceRadius: false,
-				},
-				{ // PD parameters
-					lumaPhi: 10,
-					depthPhi: 2,
-					normalPhi: 3,
-					radius: 4,
-					radiusExponent: 1,
-					rings: 2,
-					samples: 2,
-				}
-			);
-			gtaoPass.output = GTAOPass.OUTPUT.Default;
-			composer.addPass(gtaoPass);
-
-			const outputPass = new OutputPass();
-			composer.addPass(outputPass);
-
-			let frameId = null;
-			function render() {
-				if (frameId === null) {
-					frameId = requestAnimationFrame(() => {
-						composer.render();
-						frameId = null;
-					});
-				}
-			}
-
-			const hemisphereLight = new THREE.HemisphereLight(0xe3f6ff, 0xfff5e9, 2.5);
-			scene.add(hemisphereLight);
-
-			const pointLight = new THREE.PointLight(0xffffff, .5);
-			pointLight.position.set(.3, .3, .3);
-			scene.add(pointLight);
-
-			const materials = {
-				chrome:             new THREE.MeshStandardMaterial({color: 0xffffff, roughness: .1, metalness: .75}),
-				aluminium:          new THREE.MeshStandardMaterial({color: 0xaaaaaa, roughness: .3, metalness: .6}),
-				acrylic:            new THREE.MeshStandardMaterial({color: 0xaaaaaa, roughness: .6, metalness: 0}),
-				polyurethaneBlack:  new THREE.MeshStandardMaterial({color: 0x292825}),
-				polyurethaneBlue:   new THREE.MeshStandardMaterial({color: 0x0075C2}),
-				polyurethaneViolet: new THREE.MeshStandardMaterial({color: 0x91478F}),
-				polyurethaneOrange: new THREE.MeshStandardMaterial({color: 0xFF8800}),
-			}
-
-			const gltfLoader = new GLTFLoader();
-			const url = 'freeskate.glb';
-			gltfLoader.load(url, gltf => {
-				scene.add(gltf.scene);
-				console.log(`Loaded ${url}:`, gltf.scene);
-
-				const box = new THREE.Box3().setFromObject(gltf.scene);
-				const size = box.getSize(new THREE.Vector3()).length();
-				const center = box.getCenter(new THREE.Vector3());
-
-				gltf.scene.position.x += (gltf.scene.position.x - center.x);
-				gltf.scene.position.y += (gltf.scene.position.y - center.y);
-				gltf.scene.position.z += (gltf.scene.position.z - center.z);
-				camera.near = size / 100;
-				camera.far = size * 100;
-				camera.updateProjectionMatrix();
-
-				camera.position.copy(center);
-				camera.position.x += size / 2.0;
-				camera.position.y += size / 8.0;
-				camera.position.z += size / 2.0;
-				camera.lookAt(center);
-
-				const orbitControls = new OrbitControls(camera, webglRenderer.domElement);
-				orbitControls.maxDistance = size * 10;
-				orbitControls.screenSpacePanning = true;
-				orbitControls.addEventListener('change', render);
-
-				gltf.scene.traverse(object => {
-					if (object.name.startsWith('chassis')) {
-						object.material = materials.chrome;
-					} else if (object.name.startsWith('axle')) {
-						object.material = materials.chrome;
-					} else if (object.name.startsWith('plate')) {
-						object.material = materials.aluminium;
-					} else if (object.name.startsWith('shock-absorber')) {
-						object.material = materials.acrylic;
-					} else if (object.name.startsWith('wheel-front') || object.name.startsWith('wheel-back')) {
-						object.material = materials.polyurethaneBlue;
-					}
-				});
-
-				render();
-			});
-
-			function handleWindowResize() {
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-				webglRenderer.setSize(window.innerWidth, window.innerHeight);
-				composer.setSize(window.innerWidth/3, window.innerHeight/3);
-				render();
-			}
-			handleWindowResize();
-			window.addEventListener('resize', handleWindowResize);
-		</script>
+		<script src="main.mjs" type="module"></script>
 	</body>
 </html>
