@@ -199,3 +199,27 @@ function handleWindowResize() {
 }
 handleWindowResize();
 window.addEventListener('resize', handleWindowResize);
+
+// Setup fullscreen button
+{
+	// Note that the fullscreen API is only available on iOS for iPad, not iPhone.
+	const isFullscreenApiAvailable = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+	// If the app is launched with the display-mode as fullscreen, it's probably because the app is installed as a PWA.
+	const isDisplayModeFullscreen = window.matchMedia('(display-mode: fullscreen)').matches;
+	if (isFullscreenApiAvailable && !isDisplayModeFullscreen) {
+		const fullscreenButton = document.getElementById('fullscreen-button');
+		function toggleFullscreen() {
+			// Toggle fullscreen mode
+			if (!(document.fullscreenElement || document.webkitFullscreenElement)) {
+				if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen({navigationUI: "hide"});
+				else if (document.documentElement.webkitRequestFullscreen) document.documentElement.webkitRequestFullscreen();
+			} else {
+				if (document.exitFullscreen) document.exitFullscreen();
+				else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+			}
+		}
+		fullscreenButton.onclick = toggleFullscreen;
+		fullscreenButton.classList.remove('hide');
+		window.addEventListener('keydown', ({key}) => (key === 'f') && toggleFullscreen());
+	}
+}
