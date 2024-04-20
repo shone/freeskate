@@ -160,33 +160,30 @@ gltfLoader.load(url, gltf => {
 	wheelFrontMenu.querySelector('.items').insertAdjacentHTML('afterbegin', wheelColorsHtml);
 	wheelBackMenu.querySelector('.items').insertAdjacentHTML('afterbegin', wheelColorsHtml);
 
-	edgeGuardMenu.onclick = event => {
-		const color = event.target.closest('[data-color]')?.dataset.color;
-		if (color) {
-			edgeGuard.material.color.setHex(colors[color]);
-			render();
+	function onMenuSelect(menu, callback) {
+		menu.onclick = event => {
+			const colorEl = event.target.closest('[data-color]:not(.selected)');
+			if (colorEl) {
+				const previouslySelected = menu.querySelector('.selected');
+				if (previouslySelected) {
+					previouslySelected.classList.remove('selected');
+				}
+				colorEl.classList.add('selected');
+				callback(colorEl.dataset.color);
+			}
 		}
 	}
-	wheelFrontMenu.onclick = event => {
-		const color = event.target.closest('[data-color]')?.dataset.color;
-		if (color) {
-			wheelFront.material.color.setHex(colors[color]);
-			render();
-		}
-	}
-	wheelBackMenu.onclick = event => {
-		const color = event.target.closest('[data-color]')?.dataset.color;
-		if (color) {
-			wheelBack.material.color.setHex(colors[color]);
-			render();
-		}
-	}
+	onMenuSelect(edgeGuardMenu,  color => { edgeGuard.material.color.setHex(colors[color]);  render(); });
+	onMenuSelect(wheelFrontMenu, color => { wheelFront.material.color.setHex(colors[color]); render(); });
+	onMenuSelect(wheelBackMenu,  color => { wheelBack.material.color.setHex(colors[color]);  render(); });
 
 	document.body.addEventListener('pointerdown', event => {
 		const menu = event.target.closest('.menu');
 		const label = event.target.closest('label');
 		if (menu && label) {
 			menu.classList.toggle('open');
+		} else if (!menu && !label) {
+			[...document.querySelectorAll('.menu')].forEach(menu => menu.classList.remove('open'));
 		}
 	});
 
