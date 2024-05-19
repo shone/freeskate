@@ -83,39 +83,40 @@ const materials = {
 const gltfLoader = new GLTFLoader();
 const url = 'freeskate.glb';
 gltfLoader.load(url, gltf => {
-	scene.add(gltf.scene);
-	console.log(`Loaded ${url}:`, gltf.scene);
+	const freeskate = gltf.scene.children.find(obj => obj.name === 'freeskate');
+	scene.add(freeskate);
+	console.log(`Loaded "freeskate" object from "${url}`, freeskate);
 
-	const box = new THREE.Box3().setFromObject(gltf.scene);
-	const size = box.getSize(new THREE.Vector3()).length();
-	const center = box.getCenter(new THREE.Vector3());
+	const sceneBounds = new THREE.Box3().setFromObject(freeskate);
+	const sceneSize = sceneBounds.getSize(new THREE.Vector3()).length();
+	const sceneCenter = sceneBounds.getCenter(new THREE.Vector3());
 
-	gltf.scene.position.x += (gltf.scene.position.x - center.x);
-	gltf.scene.position.y += (gltf.scene.position.y - center.y);
-	gltf.scene.position.z += (gltf.scene.position.z - center.z);
-	camera.near = size / 100;
-	camera.far = size * 100;
+	freeskate.position.x += (freeskate.position.x - sceneCenter.x);
+	freeskate.position.y += (freeskate.position.y - sceneCenter.y);
+	freeskate.position.z += (freeskate.position.z - sceneCenter.z);
+	camera.near = sceneSize / 100;
+	camera.far  = sceneSize * 100;
 	camera.updateProjectionMatrix();
 
-	camera.position.copy(center);
-	camera.position.x += size / 2.0;
-	camera.position.y += size / 8.0;
-	camera.position.z += size / 2.0;
-	camera.lookAt(center);
+	camera.position.copy(sceneCenter);
+	camera.position.x += sceneSize / 2.0;
+	camera.position.y += sceneSize / 8.0;
+	camera.position.z += sceneSize / 2.0;
+	camera.lookAt(sceneCenter);
 
 	const orbitControls = new OrbitControls(camera, webglRenderer.domElement);
-	orbitControls.maxDistance = size * 10;
+	orbitControls.maxDistance = sceneSize * 10;
 	orbitControls.screenSpacePanning = true;
 	orbitControls.addEventListener('change', render);
 
 	const objects = [];
-	gltf.scene.traverse(object => objects.push(object));
+	freeskate.traverse(object => objects.push(object));
 
 	const chassis = objects.find(object => object.name.startsWith('chassis'));
 	chassis.material = materials.chrome;
 
-	const plate = objects.find(object => object.name.startsWith('plate'));
-	plate.material = materials.aluminium;
+	const deck = objects.find(object => object.name.startsWith('deck'));
+	deck.material = materials.aluminium;
 
 	const shockAbsorber = objects.find(object => object.name.startsWith('shock-absorber'));
 	shockAbsorber.material = materials.acrylic;
@@ -129,9 +130,9 @@ gltfLoader.load(url, gltf => {
 	wheelFront.material = materials.polyurethane.clone();
 	wheelBack.material  = materials.polyurethane.clone();
 
-	const edgeGuardMenu = document.querySelector('.menu.edge-guard');
+	const edgeGuardMenu  = document.querySelector('.menu.edge-guard');
 	const wheelFrontMenu = document.querySelector('.menu.wheel-front');
-	const wheelBackMenu = document.querySelector('.menu.wheel-back');
+	const wheelBackMenu  = document.querySelector('.menu.wheel-back');
 
 	const colors = {
 		aqua:      0x0097D6,

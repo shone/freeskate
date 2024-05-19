@@ -21,6 +21,7 @@ html {
 	overflow: hidden;
 
 	font-size: 19px;
+	user-select: none;
 }
 @media (pointer: coarse) {
 	html {
