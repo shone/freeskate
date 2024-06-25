@@ -6,13 +6,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
 		<link rel="shortcut icon" href="logo.png">
 		<link rel="stylesheet" href="main.css">
-	</head>
-	<body>
-		<canvas></canvas>
-		<div id="fullscreen-button"></div>
-		<div class="menu edge-guard">  <span class="items"></span> <label>Edge guard</label>  </div>
-		<div class="menu wheel-front"> <span class="items"></span> <label>Front wheel</label> </div>
-		<div class="menu wheel-back">  <span class="items"></span> <label>Back wheel</label>  </div>
+
 		<script type="importmap">
 			{
 				"imports": {
@@ -21,6 +15,33 @@
 				}
 			}
 		</script>
+
+		<link rel="modulepreload" as="script" href="main.mjs" />
+		<link rel="modulepreload" as="script" href="threejs/build/three.module.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/controls/OrbitControls.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/loaders/GLTFLoader.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/postprocessing/EffectComposer.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/postprocessing/RenderPass.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/postprocessing/GTAOPass.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/postprocessing/OutputPass.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/postprocessing/Pass.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/shaders/CopyShader.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/postprocessing/ShaderPass.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/postprocessing/MaskPass.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/shaders/OutputShader.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/shaders/GTAOShader.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/shaders/PoissonDenoiseShader.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/math/SimplexNoise.js" />
+		<link rel="modulepreload" as="script" href="threejs/examples/jsm/utils/BufferGeometryUtils.js" />
+
+		<link rel="preload" as="fetch" href="freeskate.glb" crossorigin />
+	</head>
+	<body>
+		<canvas></canvas>
+		<div id="fullscreen-button"></div>
+		<div class="menu edge-guard">  <span class="items"></span> <label>Edge guard</label>  </div>
+		<div class="menu wheel-front"> <span class="items"></span> <label>Front wheel</label> </div>
+		<div class="menu wheel-back">  <span class="items"></span> <label>Back wheel</label>  </div>
 		<script src="main.mjs" type="module"></script>
 	</body>
 </html>
