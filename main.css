@@ -15,13 +15,17 @@ html {
 	--blue:    #268bd2;
 	--cyan:    #2aa198;
 	--green:   #859900;
-	background: var(--base03);
+	background: var(--base02);
 
 	height: 100%;
 	overflow: hidden;
 
+	font-family: monospace;
 	font-size: 19px;
+	color: var(--base0);
+
 	user-select: none;
+	-webkit-tap-highlight-color: transparent;
 }
 @media (pointer: coarse) {
 	html {
@@ -40,22 +44,28 @@ canvas {
 
 #fullscreen-button {
 	position: absolute;
-	top: 0;
-	right: 0;
-	width: 2rem;
-	height: 2rem;
+	top:   .4rem;
+	right: .4rem;
+	width:  2.5rem;
+	height: 2.5rem;
+	border-radius: .3rem;
+	border: .1rem solid var(--base01);
+	box-sizing: border-box;
 	cursor: pointer;
-	background: no-repeat center / 70% url('data:image/svg+xml,\
-		<svg viewBox="0 0 8.5 8.5" xmlns="http://www.w3.org/2000/svg">\
-			<path stroke="white" stroke-width="1.3" fill="none" d="M.7 3.5V.7h2.6M7.8 3.5V.7H5.2M.7 5v2.8h2.6M7.8 5v2.8H5.2"/>\
+	background: var(--base03) no-repeat center / 1.8rem url('data:image/svg+xml,\
+		<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">\
+				<path d="m0.688 0.109h0.203v0.203m-0.281 0.0781 0.281-0.281m-0.781 0.578v0.203h0.203m0.0781-0.281-0.281 0.281" fill="none" stroke="%23839496" stroke-linecap="round" stroke-width=".0625"/>\
 		</svg>\
 	');
+}
+#fullscreen-button:hover {
+	border: .1rem solid var(--base0);
 }
 @media (display-mode: fullscreen) {
 	#fullscreen-button {
 		background-image: url('data:image/svg+xml,\
-			<svg viewBox="0 0 8.5 8.5" xmlns="http://www.w3.org/2000/svg">\
-				<path stroke="white" stroke-width="1.3" fill="none" d="m2.868 0.3038v2.8h-2.6m5.364-2.8v2.8h2.6m-5.364 5.164v-2.8h-2.6m5.364 2.8v-2.8h2.6"/>\
+			<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">\
+				<path d="m0.812 0.391h-0.203v-0.203m0.281-0.0781-0.281 0.281m-0.219 0.422v-0.203h-0.203m-0.0781 0.281 0.281-0.281" fill="none" stroke="%23839496" stroke-linecap="round" stroke-width=".0625"/>\
 			</svg>\
 		');
 	}
@@ -64,9 +74,10 @@ canvas {
 .menu {
 	position: absolute;
 	right: 0;
-	max-width: 100vw;
+	max-width: calc(100vw - .5rem);
 	box-sizing: border-box;
-	background: white;
+	background: var(--base03);
+	border: .1rem solid var(--base01);
 	border-top-left-radius: .5rem;
 	border-bottom-left-radius: .5rem;
 	height: 4rem;
@@ -92,16 +103,28 @@ canvas {
 	display: flex;
 	flex-direction: row;
 	gap: .5rem;
-	overflow-x: auto;
 	padding: .5rem;
 	padding-right: 1.5rem;
+	overflow-x: auto;
+	scrollbar-width: none;
+}
+.menu .items::-webkit-scrollbar {
+	height: 0;
+	background: transparent;
 }
 .menu [data-color] {
 	height: 100%;
 	width: 3rem;
 	aspect-ratio: 1;
+	flex-shrink: 0;
+	border: 1px solid var(--base01);
+	box-sizing: border-box;
 	border-radius: .5rem;
 	cursor: pointer;
+}
+.menu [data-color='none'] {
+	--none-color: var(--base00);
+	background: linear-gradient(-45deg, var(--none-color), var(--none-color) 45%, white 45%, white 55%, var(--none-color) 55%, var(--none-color)) !important;
 }
 .menu [data-color]:hover {
 	transform: scale(1.1);
@@ -109,8 +132,31 @@ canvas {
 .menu [data-color].selected {
 	transform: scale(1.2);
 	box-shadow: .1rem .1rem .8rem rgba(0,0,0,.7);
+	border: .1rem solid white;
 }
 
 .menu.edge-guard  { bottom: 12rem; }
-.menu.wheel-front { bottom: 7rem; }
-.menu.wheel-back  { bottom: 2rem; }
+.menu.wheel-front { bottom:  7rem; }
+.menu.wheel-back  { bottom:  2rem; }
+
+.menu.edge-guard label {
+	background: center / 2.5rem no-repeat url('data:image/svg+xml,\
+		<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">\
+			<rect x=".224" y=".108" width=".551" height=".794" ry=".153" fill="none" stroke="%23839496" stroke-width=".0797"/>\
+		</svg>\
+	');
+}
+
+.menu.wheel-front label,
+.menu.wheel-back label {
+	background: center / 3rem no-repeat url('data:image/svg+xml,\
+		<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">\
+			<path d="m0.71 0.309-0.179 0.179 0.179 0.177 0.0375-0.0375-0.114-0.114h0.295v-0.0529h-0.294l0.113-0.114z" fill="none" stroke="%23839496" stroke-width=".0136"/>\
+			<circle cx=".279" cy=".499" r=".147" stroke="%23839496" fill="none" stroke-width=".12"/>\
+		</svg>\
+	');
+}
+
+.menu.wheel-back label {
+	transform: rotate(180deg);
+}

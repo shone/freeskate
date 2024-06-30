@@ -1,14 +1,15 @@
 import * as THREE from 'three';
-import {OrbitControls} from './threejs/examples/jsm/controls/OrbitControls.js';
-import {GLTFLoader} from './threejs/examples/jsm/loaders/GLTFLoader.js';
+import {OrbitControls } from './threejs/examples/jsm/controls/OrbitControls.js';
+import {GLTFLoader    } from './threejs/examples/jsm/loaders/GLTFLoader.js';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass    } from 'three/addons/postprocessing/RenderPass.js';
+import {GTAOPass      } from 'three/addons/postprocessing/GTAOPass.js';
+import {OutputPass    } from 'three/addons/postprocessing/OutputPass.js';
 
-import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
-import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
-import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
-import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
-
-const webglRenderer = new THREE.WebGLRenderer({canvas: document.querySelector('canvas')});
-webglRenderer.setClearColor(new THREE.Color(0x002b36), 1);
+const webglRenderer = new THREE.WebGLRenderer({
+	canvas: document.querySelector('canvas'),
+	alpha: true,
+});
 webglRenderer.setPixelRatio(window.devicePixelRatio);
 webglRenderer.toneMapping = THREE.ACESFilmicToneMapping;
 webglRenderer.toneMappingExposure = 1;
@@ -72,6 +73,23 @@ const pointLight = new THREE.PointLight(0xffffff, .5);
 pointLight.position.set(.3, .3, .3);
 scene.add(pointLight);
 
+const colors = {
+	none:      0x000000,
+	aqua:      0x0097D6,
+	black:     0x2E2E2B,
+	cyan:      0x00D8EB,
+	darkGreen: 0x357C39,
+	green:     0x49EA5F,
+	lavender:  0xBD99C6,
+	mint:      0x76EDB8,
+	orange:    0xFF952E,
+	pink:      0xFF7CAE,
+	red:       0xFF554B,
+	violet:    0x9A4C98,
+	white:     0xCFCDC3,
+	yellow:    0xFFEB03,
+}
+
 const materials = {
 	chrome:       new THREE.MeshStandardMaterial({color: 0xffffff, roughness: .01, metalness: .75}),
 	aluminium:    new THREE.MeshStandardMaterial({color: 0xaaaaaa, roughness: .3, metalness: .6}),
@@ -134,22 +152,6 @@ gltfLoader.load(url, gltf => {
 	const wheelFrontMenu = document.querySelector('.menu.wheel-front');
 	const wheelBackMenu  = document.querySelector('.menu.wheel-back');
 
-	const colors = {
-		aqua:      0x0097D6,
-		black:     0x2E2E2B,
-		cyan:      0x00D8EB,
-		darkGreen: 0x357C39,
-		green:     0x49EA5F,
-		lavender:  0xBD99C6,
-		mint:      0x76EDB8,
-		orange:    0xFF952E,
-		pink:      0xFF7CAE,
-		red:       0xFF554B,
-		violet:    0x9A4C98,
-		white:     0xCFCDC3,
-		yellow:    0xFFEB03,
-	}
-
 	wheelFront.material.color.setHex(colors.aqua);
 	wheelBack.material.color.setHex(colors.aqua);
 
@@ -174,9 +176,21 @@ gltfLoader.load(url, gltf => {
 			}
 		}
 	}
-	onMenuSelect(edgeGuardMenu,  color => { edgeGuard.material.color.setHex(colors[color]);  render(); });
-	onMenuSelect(wheelFrontMenu, color => { wheelFront.material.color.setHex(colors[color]); render(); });
-	onMenuSelect(wheelBackMenu,  color => { wheelBack.material.color.setHex(colors[color]);  render(); });
+	onMenuSelect(edgeGuardMenu,  color => {
+		edgeGuard.visible = color !== 'none';
+		edgeGuard.material.color.setHex(colors[color]);
+		render();
+	});
+	onMenuSelect(wheelFrontMenu, color => {
+		wheelFront.visible = color !== 'none';
+		wheelFront.material.color.setHex(colors[color]);
+		render();
+	});
+	onMenuSelect(wheelBackMenu,  color => {
+		wheelBack.visible = color !== 'none';
+		wheelBack.material.color.setHex(colors[color]);
+		render();
+	});
 
 	document.body.addEventListener('pointerdown', event => {
 		const menu = event.target.closest('.menu');
@@ -187,6 +201,16 @@ gltfLoader.load(url, gltf => {
 			[...document.querySelectorAll('.menu')].forEach(menu => menu.classList.remove('open'));
 		}
 	});
+
+	// window.addEventListener('devicemotion', ({rotationRate}) => {
+	// 	const orientationAngleRad = (screen.orientation.angle / 360) * Math.PI*2;
+	// 	// Rotate the device motion coordinates to match the orientation of the page, e.g. portrait or landscape modes.
+	// 	const rotateRate = .00005;
+	// 	// freeskate.rotateY(rotationRate.beta  * rotateRate);
+	// 	freeskate.rotateOnAxis(camera.position -rotationRate.alpha * rotateRate);
+	// 	// freeskate.rotateZ(rotationRate.gamma  * rotateRate);
+	// 	render();
+	// });
 
 	render();
 });
