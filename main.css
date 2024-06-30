@@ -74,6 +74,7 @@ canvas {
 .menu {
 	position: absolute;
 	right: 0;
+	padding-right: env(safe-area-inset-right);
 	max-width: calc(100vw - .5rem);
 	box-sizing: border-box;
 	background: var(--base03);
@@ -104,7 +105,6 @@ canvas {
 	flex-direction: row;
 	gap: .5rem;
 	padding: .5rem;
-	padding-right: 1.5rem;
 	overflow-x: auto;
 	scrollbar-width: none;
 }
@@ -135,9 +135,9 @@ canvas {
 	border: .1rem solid white;
 }
 
-.menu.edge-guard  { bottom: 12rem; }
-.menu.wheel-front { bottom:  7rem; }
-.menu.wheel-back  { bottom:  2rem; }
+.menu.edge-guard  { bottom: 9.5rem; }
+.menu.wheel-front { bottom:  5rem; }
+.menu.wheel-back  { bottom:  .5rem; }
 
 .menu.edge-guard label {
 	background: center / 2.5rem no-repeat url('data:image/svg+xml,\
