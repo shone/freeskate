@@ -7,3 +7,14 @@ A [FreeCAD](https://www.freecad.org) model of a [JMK](https://www.jmkride.com) [
 ## Holster
 
 To get rail length: `App.getDocument("freeskate").getObject("Binder").Shape.Length`
+
+Rail segment lengths, from middle to outer:
+
+| Type | Length (cm) | Diameter (cm) | Formula |
+|-|-|-|-|
+| Bend 90deg  | 5.185 | 6.6 | (Spreadsheet.railtruckclearance+Spreadsheet.raildiameter) * pi * .25 |
+| Straight    | 12.72 |     | Spreadsheet.railLengthNegY + 3.12cm                                  |
+| Bend 180deg |  3.30 | 2.1 | (Spreadsheet.raildeckclearance+Spreadsheet.raildiameter) * pi * .5   |
+| Straight    | 13.90 |     | Spreadsheet.railLengthNegY + Spreadsheet.railLengthPosY              |
+| Bend 180deg |  3.30 | 2.1 | (Spreadsheet.railcatchclearance+Spreadsheet.raildiameter) * pi * .5  |
+| Straight    | 11.60 |     | Spreadsheet.railLengthPosY + 7.3cm                                   |
