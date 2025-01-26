@@ -135,9 +135,19 @@ canvas {
 	border: .1rem solid white;
 }
 
-.menu.edge-guard  { bottom: 9.5rem; }
-.menu.wheel-front { bottom:  5rem; }
-.menu.wheel-back  { bottom:  .5rem; }
+.menu.griptape    { bottom: 14.0rem; }
+.menu.edge-guard  { bottom:  9.5rem; }
+.menu.wheel-front { bottom:  5.0rem; }
+.menu.wheel-back  { bottom:   .5rem; }
+
+.menu.griptape label {
+	background: center / 2.5rem no-repeat url('data:image/svg+xml,\
+		<svg viewBox="0 0 1 1" xmlns="http://www.w3.org/2000/svg">\
+			<rect x=".129" y=".045" width=".752" height=".908" ry=".204" fill="%23839496"/>\
+		</svg>\
+	');
+}
+
 
 .menu.edge-guard label {
 	background: center / 2.5rem no-repeat url('data:image/svg+xml,\

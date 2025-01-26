@@ -96,6 +96,7 @@ const materials = {
 	acrylic:      new THREE.MeshStandardMaterial({color: 0xaaaaaa, roughness: .6, metalness: 0}),
 	plastic:      new THREE.MeshStandardMaterial({color: 0x000000, roughness: .6, metalness: 0}),
 	polyurethane: new THREE.MeshStandardMaterial({color: 0x000000}),
+	griptape:     new THREE.MeshStandardMaterial({color: 0x000000, roughness: .6}),
 }
 
 const gltfLoader = new GLTFLoader();
@@ -136,6 +137,10 @@ gltfLoader.load(url, gltf => {
 	const deck = objects.find(object => object.name.startsWith('deck'));
 	deck.material = materials.aluminium;
 
+	const griptape = objects.find(object => object.name.startsWith('grip-tape'));
+	griptape.material = materials.griptape;
+	griptape.visible = false;
+
 	const shockAbsorber = objects.find(object => object.name.startsWith('shock-absorber'));
 	shockAbsorber.material = materials.acrylic;
 
@@ -148,6 +153,7 @@ gltfLoader.load(url, gltf => {
 	wheelFront.material = materials.polyurethane.clone();
 	wheelBack.material  = materials.polyurethane.clone();
 
+	const griptapeMenu  = document.querySelector('.menu.griptape');
 	const edgeGuardMenu  = document.querySelector('.menu.edge-guard');
 	const wheelFrontMenu = document.querySelector('.menu.wheel-front');
 	const wheelBackMenu  = document.querySelector('.menu.wheel-back');
@@ -159,6 +165,7 @@ gltfLoader.load(url, gltf => {
 		<span data-color="${name}" style="background-color: #${value.toString(16).padStart(6, '0')}"></span>
 	`).join('');
 
+	griptapeMenu.querySelector('.items').insertAdjacentHTML('afterbegin', wheelColorsHtml);
 	edgeGuardMenu.querySelector('.items').insertAdjacentHTML('afterbegin', wheelColorsHtml);
 	wheelFrontMenu.querySelector('.items').insertAdjacentHTML('afterbegin', wheelColorsHtml);
 	wheelBackMenu.querySelector('.items').insertAdjacentHTML('afterbegin', wheelColorsHtml);
@@ -176,6 +183,11 @@ gltfLoader.load(url, gltf => {
 			}
 		}
 	}
+	onMenuSelect(griptapeMenu,  color => {
+		griptape.visible = color !== 'none';
+		griptape.material.color.setHex(colors[color]);
+		render();
+	});
 	onMenuSelect(edgeGuardMenu,  color => {
 		edgeGuard.visible = color !== 'none';
 		edgeGuard.material.color.setHex(colors[color]);
