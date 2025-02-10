@@ -6,15 +6,14 @@ import {RenderPass    } from 'three/addons/postprocessing/RenderPass.js';
 import {GTAOPass      } from 'three/addons/postprocessing/GTAOPass.js';
 import {OutputPass    } from 'three/addons/postprocessing/OutputPass.js';
 
-const webglRenderer = new THREE.WebGLRenderer({
-	canvas: document.querySelector('canvas'),
-	alpha: true,
-});
+const webglRenderer = new THREE.WebGLRenderer({canvas: document.querySelector('canvas')});
 webglRenderer.setPixelRatio(window.devicePixelRatio);
 webglRenderer.toneMapping = THREE.ACESFilmicToneMapping;
 webglRenderer.toneMappingExposure = 1;
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x073642);
+
 const camera = new THREE.PerspectiveCamera(
 	60, // FOV
 	window.innerWidth / window.innerHeight, // Aspect
