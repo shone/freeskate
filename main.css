@@ -87,34 +87,35 @@ canvas {
 	display: flex;
 	flex-direction: row;
 	gap: .5rem;
+	label {
+		width: 4rem;
+		flex-shrink: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: .5rem;
+		box-sizing: border-box;
+		font-weight: bold;
+		cursor: pointer;
+	}
+	&:not(.open) .items {
+		display: none;
+	}
+	.items {
+		display: flex;
+		flex-direction: row;
+		gap: .5rem;
+		padding: .5rem;
+		overflow-x: auto;
+		scrollbar-width: none;
+		&::-webkit-scrollbar {
+			height: 0;
+			background: transparent;
+		}
+	}
 }
-.menu:not(.open) .items {
-	display: none;
-}
-.menu label {
-	width: 4rem;
-	flex-shrink: 0;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: .5rem;
-	box-sizing: border-box;
-	font-weight: bold;
-	cursor: pointer;
-}
-.menu .items {
-	display: flex;
-	flex-direction: row;
-	gap: .5rem;
-	padding: .5rem;
-	overflow-x: auto;
-	scrollbar-width: none;
-}
-.menu .items::-webkit-scrollbar {
-	height: 0;
-	background: transparent;
-}
-.menu [data-color] {
+
+[data-color] {
 	height: 100%;
 	width: 3rem;
 	aspect-ratio: 1;
@@ -123,24 +124,26 @@ canvas {
 	box-sizing: border-box;
 	border-radius: .5rem;
 	cursor: pointer;
-}
-.menu [data-color='none'] {
-	--none-color: var(--base00);
-	background: linear-gradient(-45deg, var(--none-color), var(--none-color) 45%, white 45%, white 55%, var(--none-color) 55%, var(--none-color)) !important;
-}
-.menu [data-color]:hover {
-	transform: scale(1.1);
-}
-.menu [data-color].selected {
-	transform: scale(1.2);
-	box-shadow: .1rem .1rem .8rem rgba(0,0,0,.7);
-	border: .1rem solid white;
+	&[data-color='none'] {
+		--none-color: var(--base00);
+		background: linear-gradient(-45deg, var(--none-color), var(--none-color) 45%, white 45%, white 55%, var(--none-color) 55%, var(--none-color)) !important;
+	}
+	&:hover {
+		transform: scale(1.1);
+	}
+	&.selected {
+		transform: scale(1.2);
+		box-shadow: .1rem .1rem .8rem rgba(0,0,0,.7);
+		border: .1rem solid white;
+	}
 }
 
-.menu.griptape    { bottom: 14.0rem; }
-.menu.edge-guard  { bottom:  9.5rem; }
-.menu.wheel-front { bottom:  5.0rem; }
-.menu.wheel-back  { bottom:   .5rem; }
+.menu {
+	&.griptape    { bottom: 14.0rem; }
+	&.edge-guard  { bottom:  9.5rem; }
+	&.wheel-front { bottom:  5.0rem; }
+	&.wheel-back  { bottom:   .5rem; }
+}
 
 .menu.griptape label {
 	background: center / 2.5rem no-repeat url('data:image/svg+xml,\
