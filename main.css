@@ -52,6 +52,9 @@ canvas {
 	height: 2.5rem;
 	border-radius: .3rem;
 	border: .1rem solid var(--base01);
+	&:hover {
+		border-color: var(--base0);
+	}
 	box-sizing: border-box;
 	cursor: pointer;
 	background: var(--base03) no-repeat center / 1.8rem url('data:image/svg+xml,\
@@ -59,9 +62,6 @@ canvas {
 				<path d="m0.688 0.109h0.203v0.203m-0.281 0.0781 0.281-0.281m-0.781 0.578v0.203h0.203m0.0781-0.281-0.281 0.281" fill="none" stroke="%23839496" stroke-linecap="round" stroke-width=".0625"/>\
 		</svg>\
 	');
-}
-#fullscreen-button:hover {
-	border: .1rem solid var(--base0);
 }
 @media (display-mode: fullscreen) {
 	#fullscreen-button {
@@ -81,6 +81,9 @@ canvas {
 	box-sizing: border-box;
 	background: var(--base03);
 	border: .1rem solid var(--base01);
+	&:hover {
+		border-color: var(--base0);
+	}
 	border-top-left-radius: .5rem;
 	border-bottom-left-radius: .5rem;
 	height: 4rem;

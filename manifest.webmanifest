@@ -1,0 +1,37 @@
+{
+	"name": "Freeskate",
+	"short_name": "Freeskate",
+	"start_url": "/freeskate/",
+	"display": "fullscreen",
+	"theme_color": "#073642",
+	"background_color": "#073642",
+	"description": "Freeskate configurator",
+	"icons": [
+		{
+			"src": "icon/icon_64x64.png",
+			"sizes": "64x64",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "icon/icon_192x192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "icon/icon_512x512.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "any maskable"
+		}
+	],
+	"screenshots": [
+		{
+			"src": "screenshot.png",
+			"sizes": "1032x772",
+			"form_factor": "narrow",
+			"type": "image/png"
+		}
+	]
+}

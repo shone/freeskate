@@ -1,3 +1,9 @@
+// Register service worker so the app can be used offline.
+// This is also a prerequisite for Chrome allowing the app to be installed as a PWA.
+if (navigator.serviceWorker && location.protocol !== 'file:') {
+	navigator.serviceWorker.register('service-worker.js', {scope: './'});
+}
+
 import * as THREE from 'three';
 import {GLTFLoader    } from './threejs/examples/jsm/loaders/GLTFLoader.js';
 import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
@@ -168,7 +174,9 @@ function handleWindowResize() {
 	camera.aspect = window.innerWidth / window.innerHeight;
 	camera.updateProjectionMatrix();
 	webglRenderer.setSize(window.innerWidth, window.innerHeight);
-	composer.setSize(window.innerWidth/2, window.innerHeight/2);
+	// webglRenderer.setSize(window.innerWidth, window.innerHeight);
+	composer.setSize(window.innerWidth, window.innerHeight);
+	// composer.setSize(window.innerWidth/2, window.innerHeight/2);
 	render();
 }
 handleWindowResize();
@@ -316,12 +324,12 @@ function onMenuSelect(menu, callback) {
 		}
 	}
 }
-onMenuSelect(griptapeMenu,  color => {
+onMenuSelect(griptapeMenu, color => {
 	griptape.visible = color !== 'none';
 	griptape.material.color.setHex(colors[color]);
 	render();
 });
-onMenuSelect(edgeGuardMenu,  color => {
+onMenuSelect(edgeGuardMenu, color => {
 	edgeGuard.visible = color !== 'none';
 	edgeGuard.material.color.setHex(colors[color]);
 	render();
@@ -331,7 +339,7 @@ onMenuSelect(wheelFrontMenu, color => {
 	wheelFront.material.color.setHex(colors[color]);
 	render();
 });
-onMenuSelect(wheelBackMenu,  color => {
+onMenuSelect(wheelBackMenu, color => {
 	wheelBack.visible = color !== 'none';
 	wheelBack.material.color.setHex(colors[color]);
 	render();
@@ -347,12 +355,21 @@ document.body.addEventListener('pointerdown', event => {
 	}
 });
 
-// window.addEventListener('devicemotion', ({rotationRate}) => {
-// 	const orientationAngleRad = (screen.orientation.angle / 360) * Math.PI*2;
-// 	// Rotate the device motion coordinates to match the orientation of the page, e.g. portrait or landscape modes.
-// 	const rotateRate = .00005;
-// 	// freeskate.rotateY(rotationRate.beta  * rotateRate);
-// 	freeskate.rotateOnAxis(camera.position -rotationRate.alpha * rotateRate);
-// 	// freeskate.rotateZ(rotationRate.gamma  * rotateRate);
-// 	render();
-// });
+window.addEventListener('devicemotion', ({rotationRate}) => {
+	const deviceRotationXDegreesPerSecond = rotationRate.beta * .2;
+	if (Math.abs(deviceRotationXDegreesPerSecond) > 100) {
+		orbitMomentum.xRadPerMs = (deviceRotationXDegreesPerSecond * -.0001);
+	}
+	const deviceRotationYDegreesPerSecond = rotationRate.alpha * .2;
+	if (Math.abs(deviceRotationYDegreesPerSecond) > 100) {
+		orbitMomentum.yRadPerMs = (deviceRotationYDegreesPerSecond * -.00003);
+	}
+	// orbitMomentum.yRadPerMs = (deviceRotationYDegreesPerSecond * -.0001);
+	// const orientationAngleRad = (screen.orientation.angle / 360) * Math.PI*2;
+	// // Rotate the device motion coordinates to match the orientation of the page, e.g. portrait or landscape modes.
+	// const rotateRate = .00005;
+	// // freeskate.rotateY(rotationRate.beta  * rotateRate);
+	// freeskate.rotateOnAxis(camera.position -rotationRate.alpha * rotateRate);
+	// // freeskate.rotateZ(rotationRate.gamma  * rotateRate);
+	render();
+});
