@@ -6,7 +6,7 @@ A [FreeCAD](https://www.freecad.org) model of a [JMK](https://www.jmkride.com) [
 
 ## Holster
 
-To get rail length: `App.getDocument("freeskate").getObject("Binder").Shape.Length`
+To get rail length: `App.getDocument("freeskate").getObjectsByLabel("rails-shape-binder")[0].Shape.Length`
 
 Rail segment lengths, from middle to outer:
 
