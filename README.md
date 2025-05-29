@@ -18,3 +18,12 @@ Rail segment lengths, from middle to outer:
 | Straight    | 13.90 |     | Spreadsheet.railLengthNegY + Spreadsheet.railLengthPosY              |
 | Bend 180deg |  3.30 | 2.1 | (Spreadsheet.railcatchclearance+Spreadsheet.raildiameter) * pi * .5  |
 | Straight    | 11.60 |     | Spreadsheet.railLengthPosY + 7.3cm                                   |
+
+## Rod bending
+
+6mm stainless steel rod, bent 180 degrees around an 18mm diameter mandril resulted in an actual inner bend diameter of 19.5mm (outer diameter ~32mm). The actual bend diameter is larger than the mandril due to spring-back of the stainless steel material. Also, to acheive a 180 degree bend the rod must be bend back onto itself so that it touches and then bent even a bit further.
+
+| Material                | Bend       | Mandril diameter | Actual bend diameter (inner) |
+| ----------------------- | ---------- | ---------------- | ---------------------------- |
+| 6mm Stainless steel rod | 180 degree |             18mm |                       19.5mm |
+| 6mm Stainless steel rod | 180 degree |              9mm |                       10.0mm |
